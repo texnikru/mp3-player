@@ -538,21 +538,24 @@ class TemplateMaxi extends ATemplate
 				this._initButton(this._infoButtonInstance);
 			}
 			
-			this._infoButtonInstance._x = (this._showStop)?this.buttonWidth * 2 : this.buttonWidth;
+			this._infoButtonInstance._x = (this._showStop) ? this.buttonWidth * 2 : this.buttonWidth;
 			
 			this._infoButtonInstance.area_mc.onRelease = this.delegate(this, this.infoRelease);
 			
 			var str:String = this._showInfo;
 			if (str.indexOf("://") > 0 || str.indexOf("%3A%2F%2F") > 0) {
 				var buyStyle:TextFormat = new TextFormat(); 
-				buyStyle.color = 0xFF0000;
+				buyStyle.color = this._buttonOverColor;
+				buyStyle.size = this._height/2;
+				buyStyle.font = "_sans"; 
+				buyStyle.align = "center"; 
 
-				this._infoButtonInstance.icon_mc.createTextField("buy_txt", 1,
-					2, 2, this._infoButtonInstance.icon_mc._width - 2, this._infoButtonInstance.icon_mc._height - 2); 
-
-				this._infoButtonInstance.icon_mc.buy_txt.text = "Buy";
-				this._infoButtonInstance.icon_mc.buy_txt.selectable = false;
-				this._infoButtonInstance.icon_mc.buy_txt.setNewTextFormat(buyStyle);
+				this._infoButtonInstance.createTextField("buy_txt", this._target.getNextHighestDepth(),
+					0, 2, this.buttonWidth, this._height); 
+				
+				this._infoButtonInstance.buy_txt.text = "Buy";
+				this._infoButtonInstance.buy_txt.selectable = false;
+				this._infoButtonInstance.buy_txt.setTextFormat(buyStyle);
 			}
 			else
 			{
@@ -935,12 +938,19 @@ class TemplateMaxi extends ATemplate
 	 * Action sur le bouton info	 */
 	public function infoRelease()
 	{
-		if (this._infoPanel._visible = !this._infoPanel._visible) {
-			this._infoPanel.onEnterFrame = this._infoPanel.update;
-		} else {
-			delete this._infoPanel.onEnterFrame;
+		var str:String = this._showInfo;
+		if (str.indexOf("://") > 0 || str.indexOf("%3A%2F%2F") > 0) {
+			getURL(str, "_blank");
 		}
+		else
+		{
+			if (this._infoPanel._visible = !this._infoPanel._visible) {
+				this._infoPanel.onEnterFrame = this._infoPanel.update;
+			} else {
+				delete this._infoPanel.onEnterFrame;
+			}
 		}
+	}
 	/**
 	 * Modifie le volume
 	 * 
