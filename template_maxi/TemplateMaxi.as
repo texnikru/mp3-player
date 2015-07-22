@@ -44,7 +44,7 @@ class TemplateMaxi extends ATemplate
 	private var _textColor:Number = 0xffffff;
 	private var _loadingColor:Number = 0xffff00;
 	private var _showStop:Boolean = false;
-	private var _showInfo:Boolean = false;
+	private var _showInfo:String = "";
 	private var _showVolume:Boolean = false;
 	private var _showSlider:Boolean = true;
 	private var _volume:Number = 100;
@@ -269,8 +269,9 @@ class TemplateMaxi extends ATemplate
 						this[pVarName] = parseInt(pList[i], 16);
 						break;
 					case "Boolean":
-						this[pVarName] = (pList[i] == "false" || pList[i] == false)?false:true;
+						this[pVarName] = (pList[i] == "false" || pList[i] == false) ? false : true;
 						break;
+					case "String":
 					default:
 						this[pVarName] = pList[i];
 				}
@@ -305,7 +306,7 @@ class TemplateMaxi extends ATemplate
 		this._setVar("_textColor", [_root.textcolor, pConfig.textcolor], "Color");
 		this._setVar("_loadingColor", [_root.loadingcolor, pConfig.loadingcolor], "Color");
 		this._setVar("_showStop", [_root.showstop, pConfig.showstop], "Boolean");
-		this._setVar("_showInfo", [_root.showinfo, pConfig.showinfo], "Boolean");
+		this._setVar("_showInfo", [_root.showinfo, pConfig.showinfo], "String");
 		this._setVar("_showVolume", [_root.showvolume, pConfig.showvolume], "Boolean");
 		this._setVar("_showSlider", [_root.showslider, pConfig.showslider], "Boolean");
 		this._setVar("_backgroundSkin", [_root.skin, pConfig.skin], "String");
@@ -537,21 +538,35 @@ class TemplateMaxi extends ATemplate
 				this._initButton(this._infoButtonInstance);
 			}
 			
-			this._infoButtonInstance._x = (this._showStop)?this.buttonWidth*2:this.buttonWidth;
+			this._infoButtonInstance._x = (this._showStop)?this.buttonWidth * 2 : this.buttonWidth;
 			
 			this._infoButtonInstance.area_mc.onRelease = this.delegate(this, this.infoRelease);
 			
-			
-			this._infoButtonInstance.icon_mc.lineStyle(2, this._buttonColor); 
-			this._infoButtonInstance.icon_mc.moveTo(0, 2); 
-			this._infoButtonInstance.icon_mc.curveTo(0, 0, 2, 0); 
-			this._infoButtonInstance.icon_mc.curveTo(4, 0, 4, 2); 
-			this._infoButtonInstance.icon_mc.curveTo(4, 3.5, 3, 4); 
-			this._infoButtonInstance.icon_mc.curveTo(2, 5, 2, 6); 
-			this._infoButtonInstance.icon_mc.moveTo(2, 8); 
-			this._infoButtonInstance.icon_mc.lineTo(2, 9); 
-			this._infoButtonInstance.icon_mc._y = this._height/2 - this._infoButtonInstance.icon_mc._height/2 + 2; 
-			this._infoButtonInstance.icon_mc._x = this.buttonWidth/2 - this._infoButtonInstance.icon_mc._width/2 + 2; 
+			var str:String = this._showInfo;
+			if (str.indexOf("://") > 0 || str.indexOf("%3A%2F%2F") > 0) {
+				var buyStyle:TextFormat = new TextFormat(); 
+				buyStyle.color = 0xFF0000;
+
+				this._infoButtonInstance.icon_mc.createTextField("buy_txt", 1,
+					2, 2, this._infoButtonInstance.icon_mc._width - 2, this._infoButtonInstance.icon_mc._height - 2); 
+
+				this._infoButtonInstance.icon_mc.buy_txt.text = "Buy";
+				this._infoButtonInstance.icon_mc.buy_txt.selectable = false;
+				this._infoButtonInstance.icon_mc.buy_txt.setNewTextFormat(buyStyle);
+			}
+			else
+			{
+				this._infoButtonInstance.icon_mc.lineStyle(2, this._buttonColor); 
+				this._infoButtonInstance.icon_mc.moveTo(0, 2); 
+				this._infoButtonInstance.icon_mc.curveTo(0, 0, 2, 0); 
+				this._infoButtonInstance.icon_mc.curveTo(4, 0, 4, 2); 
+				this._infoButtonInstance.icon_mc.curveTo(4, 3.5, 3, 4); 
+				this._infoButtonInstance.icon_mc.curveTo(2, 5, 2, 6); 
+				this._infoButtonInstance.icon_mc.moveTo(2, 8); 
+				this._infoButtonInstance.icon_mc.lineTo(2, 9); 
+				this._infoButtonInstance.icon_mc._y = this._height/2 - this._infoButtonInstance.icon_mc._height/2 + 2; 
+				this._infoButtonInstance.icon_mc._x = this.buttonWidth/2 - this._infoButtonInstance.icon_mc._width/2 + 2; 
+			}
 		}
 	}
 	/**
@@ -595,8 +610,8 @@ class TemplateMaxi extends ATemplate
 			this._infoPanel._visible = false;
 			this._infoPanel.onRelease = function()
 			{
-				delete this.onEnterFrame;
-				this._visible = false;
+					delete this.onEnterFrame;
+					this._visible = false;
 			};
 			
 			this._infoPanel.waitScroll = this._infoPanel.scrollMemo = 0;
@@ -642,8 +657,8 @@ class TemplateMaxi extends ATemplate
 					this.scrollMemo = this.scrollMemo % (textLength);
 				}
 			};
-		}
-	}
+				}
+			}
 	/**
 	 * Initialisation du bouton Volume
 	 */
@@ -925,7 +940,7 @@ class TemplateMaxi extends ATemplate
 		} else {
 			delete this._infoPanel.onEnterFrame;
 		}
-	}
+		}
 	/**
 	 * Modifie le volume
 	 * 
