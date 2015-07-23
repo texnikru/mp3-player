@@ -1,0 +1,1 @@
+.\mtasc\mtasc.exe -version 7 -v -main -header 200:20:24 -cp ./classes -swf ./template_maxi/player_mp3_maxi.swf ./template_maxi/TemplateMaxi.as

@@ -543,7 +543,7 @@ class TemplateMaxi extends ATemplate
 			this._infoButtonInstance.area_mc.onRelease = this.delegate(this, this.infoRelease);
 			
 			var str:String = this._showInfo;
-			if (str.indexOf("://") > 0 || str.indexOf("%3A%2F%2F") > 0) {
+			if (str.indexOf("://") > 0 || str.indexOf("%3A%2F%2F") > 0 || str == "#") {
 				var buyStyle:TextFormat = new TextFormat(); 
 				buyStyle.color = this._buttonOverColor;
 				buyStyle.size = this._height/2;
@@ -556,6 +556,14 @@ class TemplateMaxi extends ATemplate
 				this._infoButtonInstance.buy_txt.text = "Buy";
 				this._infoButtonInstance.buy_txt.selectable = false;
 				this._infoButtonInstance.buy_txt.setTextFormat(buyStyle);
+
+				if( str == "#" )
+				{
+					buyStyle.color = this._buttonColor;
+					this._infoButtonInstance.buy_txt.setTextFormat(buyStyle);
+					this._infoButtonInstance.buy_txt._alpha = 30;
+					this._infoButtonInstance.area_mc.enabled = false;
+				}
 			}
 			else
 			{
@@ -941,6 +949,9 @@ class TemplateMaxi extends ATemplate
 		var str:String = this._showInfo;
 		if (str.indexOf("://") > 0 || str.indexOf("%3A%2F%2F") > 0) {
 			getURL(str, "_blank");
+		}
+		else if (str == "#") {
+			// Passive
 		}
 		else
 		{
