@@ -542,31 +542,32 @@ class TemplateMaxi extends ATemplate
 			
 			this._infoButtonInstance.area_mc.onRelease = this.delegate(this, this.infoRelease);
 			
-			var str:String = this._showInfo;
-			if (str.indexOf("://") > 0 || str.indexOf("%3A%2F%2F") > 0 || str == "#") {
+			var buyStr:String = "Buy";
+			var buyLink:String = this._showInfo;
+			if (buyLink.indexOf("://") > 0 || buyLink.indexOf("%3A%2F%2F") > 0 || buyLink == "#") {
 				var buyStyle:TextFormat = new TextFormat(); 
 				buyStyle.color = this._buttonOverColor;
-				buyStyle.size = this._height/2;
+				buyStyle.size = Math.round(this._height / 3);
 				buyStyle.font = "_sans"; 
 				buyStyle.align = "center"; 
 
+				var metrics:Object = buyStyle.getTextExtent(buyStr);
+				var y:Number = Math.max(Math.round((this._height - metrics.textFieldHeight) / 2), 0);
+
 				this._infoButtonInstance.createTextField("buy_txt", this._target.getNextHighestDepth(),
-					0, 2, this.buttonWidth, this._height); 
+					0, y, this.buttonWidth, this._height - y); 
 				
-				this._infoButtonInstance.buy_txt.text = "Buy";
+				this._infoButtonInstance.buy_txt.text = buyStr;
 				this._infoButtonInstance.buy_txt.selectable = false;
 				this._infoButtonInstance.buy_txt.setTextFormat(buyStyle);
 
-				if( str == "#" )
-				{
+				if( buyLink == "#" ) {
 					buyStyle.color = this._buttonColor;
 					this._infoButtonInstance.buy_txt.setTextFormat(buyStyle);
 					this._infoButtonInstance.buy_txt._alpha = 30;
 					this._infoButtonInstance.area_mc.enabled = false;
 				}
-			}
-			else
-			{
+			} else {
 				this._infoButtonInstance.icon_mc.lineStyle(2, this._buttonColor); 
 				this._infoButtonInstance.icon_mc.moveTo(0, 2); 
 				this._infoButtonInstance.icon_mc.curveTo(0, 0, 2, 0); 
@@ -946,11 +947,11 @@ class TemplateMaxi extends ATemplate
 	 * Action sur le bouton info	 */
 	public function infoRelease()
 	{
-		var str:String = this._showInfo;
-		if (str.indexOf("://") > 0 || str.indexOf("%3A%2F%2F") > 0) {
-			getURL(str, "_blank");
+		var buyLink:String = this._showInfo;
+		if (buyLink.indexOf("://") > 0 || buyLink.indexOf("%3A%2F%2F") > 0) {
+			getURL(buyLink, "_blank");
 		}
-		else if (str == "#") {
+		else if (buyLink == "#") {
 			// Passive
 		}
 		else
